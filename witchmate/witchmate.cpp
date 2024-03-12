@@ -72,32 +72,44 @@ void secondQuest()
     convertToSimpleIterations(A, B);
     printMatrix(A, B);
 
+    cout << "\t Simple iterations: \n";
     auto x = findSimpleIterationsXs(A, B, precision);
-    for (int i = 0; i < x.size(); i++)
-        cout << x[i] << "\t";
+    for (auto i : x)
+        printf("%.7f \t", i);
+
+    cout << "\n\n\t Seidel: \n";
+    x = findSeidelXs(A, B, precision);
+
+    for (auto i : x)
+        printf("%.7f \t", i);
 }
 
 void thirdQuest()
 {
     vector<vector<float>> a = {
-        {1, 2, 0},
-        {3, 2, 4},
-        {0, 1, 2}
+        {1, 2, 0, 0, 0, 0},
+        {3, 3, 2, 0, 0, 0},
+        {0, 4, 2, 3, 0, 0},
+        {0, 0, 4, 3, 3, 0},
+        {0, 0, 0, 2, 2, 3},
+        {0, 0, 0, 0, 1, 2},
     };
 
-    vector<float> b = { 1, 2, 3};
+    vector<float> b = {1, 2, 3, 4, 5, 6};
+
+    cout << "\n\n" << translateToWolfram(a, b) << "\n\n";
 
     cout << "\tThree diagonal matrix:\n";
     printMatrix(a, b);
-    
+
 
     auto xs = findThreeDiagonalXs(a, b);
 
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
-    for(auto x : xs)
+    for (auto x : xs)
         printf("%.7f\t", x);
     cout << endl;
-    
+
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 }
 
@@ -105,11 +117,10 @@ int main()
 {
     int choise = 0;
 
-    
-    lol:
+lol:
     cin >> choise;
 
-    switch(choise)
+    switch (choise)
     {
     case 1:
         firstQuest();
@@ -120,9 +131,9 @@ int main()
     case 3:
         thirdQuest();
         break;
-        default:
-            goto lol;
-            break;
+    default:
+        goto lol;
+        break;
     }
 
     getchar();

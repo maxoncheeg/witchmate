@@ -5,29 +5,29 @@ using namespace std;
 
 vector<float> findThreeDiagonalXs(vector<vector<float>> A, vector<float> B)
 {
-    vector<vector<float>> a(A.size(), vector<float>(A.size(), 0));
+    vector a(A.size(), vector<float>(A.size(), 0));
     vector<float> b(B.size(), 0);
 
-    // check on three-diagonal-like matrix are needed
+    // todo: check on three-diagonal-like matrix are needed
 
     for (int i = 0; i < A.size(); ++i)
     {
         if (i == 0)
         {
-            a[i][i] = A[i][i]; //D1
+            a[i][i] = A[i][i]; // D1
             b[i] = B[i]; // B1
         }
         else
         {
-            float alpha = a[i - 1][i] / a[i - 1][i - 1]; // Ei-1 / Di-1
-            a[i][i] = A[i][i] - A[i][i - 1] * alpha; // Di - Ci * alpha
+            float alpha = a[i - 1][i] / a[i - 1][i - 1]; // E_(i-1) / D_(i-1)
+            a[i][i] = A[i][i] - A[i][i - 1] * alpha; // D_i - C_i * alpha
 
-            float beta = b[i - 1] / a[i - 1][i - 1]; // Bi-1 / Di-1
-            b[i] = B[i] - A[i][i - 1] * beta; // Bi - Ci * beta
+            float beta = b[i - 1] / a[i - 1][i - 1]; // B_(i-1) / D_(i-1)
+            b[i] = B[i] - A[i][i - 1] * beta; // B_i - C_i * beta
         }
 
         if(i + 1 < a.size())
-            a[i][i + 1] = A[i][i + 1]; // Ei
+            a[i][i + 1] = A[i][i + 1]; // E_i
     }
 
     vector<float> xs(b.size(), 0);
@@ -36,7 +36,7 @@ vector<float> findThreeDiagonalXs(vector<vector<float>> A, vector<float> B)
     for (int i = xs.size() - 2; i >= 0; i--)
     {
         float alpha = a[i][i + 1] / a[i][i],
-              beta = b[i] / a[i][i];// theres a problem here
+              beta = b[i] / a[i][i];
         xs[i] = beta - alpha * xs[i + 1];
     }
 
