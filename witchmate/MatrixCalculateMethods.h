@@ -37,24 +37,25 @@ vector<float> substractVectors(vector<float> a, vector<float> b) {
 
 float vectorLength(vector<float> x) {
 	float sum = 0;
-	for (int i = 0; i < x.size(); i++)
-		sum += pow(x[i], 2);
+	for (float i : x)
+		sum += pow(i, 2);
 	return sqrt(sum);
 }
 
 #pragma region FIRST QUEST
 
 // matrix should be square like shit maybe, so i think i do it right
+// todo: fix this shit
 void chooseMainElements(vector<vector<float>>& A) {
-	for (int i = 0; i < A.size(); i++)
-		for (int j = i + 1; j < A[i].size(); j++)
+	for (size_t i = 0; i < A.size(); i++)
+		for (size_t j = i + 1; j < A[i].size(); j++)
 			if (abs(A[i][j]) > abs(A[i][i]))
 			{
-				for (int k = 0; k < A.size(); k++)
+				for (auto& k : A)
 				{
-					float temp = A[k][i];
-					A[k][i] = A[k][j];
-					A[k][j] = temp;
+					float temp = k[i];
+					k[i] = k[j];
+					k[j] = temp;
 				}
 
 				continue;
@@ -63,14 +64,14 @@ void chooseMainElements(vector<vector<float>>& A) {
 
 // tests are needed
 void convertToStepwise(vector<vector<float>>& A, vector<float>& B) {
-	for (int i = 0; i < A[0].size(); i++)
+	for (int i = 0; i < A.size(); i++)
 	{
-		if (A.size() <= i || A[0].size() <= i)continue;
+		if (A.size() <= i || A[0].size() <= i) continue;
 
 		float a = A[i][i];
 
 		if (a == 0) {
-			for (float k = 0; k < A.size(); k++)
+			for (size_t k = i + 1; k < A.size(); k++)
 				if (A[k][i] != 0)
 				{
 					a = A[k][i];
@@ -106,14 +107,14 @@ vector<float> findStepwiseXs(vector<vector<float>>& A, vector<float>& B) {
 
 	for (int i = A.size() - 1; i >= 0; i--)
 	{
-		float sum = B[i];
+		float total = B[i];
 		for (int j = A[i].size() - 1; j >= 0; j--)
 			if (A[i][j] != 0)
 			{
 				if (X.size() >= A[i].size() - j)
-					sum -= X[A[i].size() - j - 1] * A[i][j];
+					total -= X[A[i].size() - j - 1] * A[i][j];
 				else
-					X.push_back(sum / A[i][j]);
+					X.push_back(total / A[i][j]);
 			}
 			else break;
 	}

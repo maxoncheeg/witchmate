@@ -3,24 +3,26 @@
 #include <Windows.h>
 
 #include "MatrixCalculateMethods.h"
+#include "ThreeDiagonalMatrix.h"
 using namespace std;
 
-void firstQuest() {
+void firstQuest()
+{
     vector<vector<float>> A1 = {
-        { 2.00001, 2, 3, 1 },
-        { 1, 1, 1, 1 },
-        { -1, 1, -2, 1 },
-        { 2, 1, 1, 1}
+        {2.00001f, 2, 3, 1},
+        {1, 1, 1, 1},
+        {-1, 1, -2, 1},
+        {2, 1, 1, 1}
     };
 
-    auto A2 = vector<vector<float>>(A1);
+    auto A2 = vector(A1);
 
-    vector<float> B1 = { 8.00003, 2, -1, 5 };
+    vector<float> B1 = {8.00003f, 2, -1, 5};
     auto B2 = vector<float>(B1);
 
     chooseMainElements(A2);
 
-    cout << "\t Matrix A1: " << endl;
+    cout << "\t Matrix A1: " << '\n';
     printMatrix(A1, B1);
 
     cout << "\t Matrix A2 with selection of major element by row: " << endl;
@@ -35,8 +37,8 @@ void firstQuest() {
     cout << "\t Triangle matrix A2: " << endl;
     printMatrix(A2, B2);
 
-    auto x1 = findStepwiseXs(A1, B1);
-    auto x2 = findStepwiseXs(A2, B2);
+    const auto x1 = findStepwiseXs(A1, B1);
+    const auto x2 = findStepwiseXs(A2, B2);
 
     cout << "\n\t Result A1: \t";
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 12);
@@ -53,14 +55,15 @@ void firstQuest() {
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 }
 
-void secondQuest() {
+void secondQuest()
+{
     vector<vector<float>> A = {
         {10, 3, 1},
         {3, 14, 2},
         {-3, 2, 12}
     };
 
-    vector<float> B = { 18, 35, 25 };
+    vector<float> B = {18, 35, 25};
 
     float precision = 1e-7;
 
@@ -74,12 +77,55 @@ void secondQuest() {
         cout << x[i] << "\t";
 }
 
-#pragma endregion
+void thirdQuest()
+{
+    vector<vector<float>> a = {
+        {1, 2, 0},
+        {3, 2, 4},
+        {0, 1, 2}
+    };
 
-int main() {
-    setlocale(LC_ALL, "");
-    //firstQuest();
-    secondQuest();
+    vector<float> b = { 1, 2, 3};
 
+    cout << "\tThree diagonal matrix:\n";
+    printMatrix(a, b);
+    
+
+    auto xs = findThreeDiagonalXs(a, b);
+
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 10);
+    for(auto x : xs)
+        printf("%.7f\t", x);
+    cout << endl;
+    
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
+}
+
+int main()
+{
+    int choise = 0;
+
+    
+    lol:
+    cin >> choise;
+
+    switch(choise)
+    {
+    case 1:
+        firstQuest();
+        break;
+    case 2:
+        secondQuest();
+        break;
+    case 3:
+        thirdQuest();
+        break;
+        default:
+            goto lol;
+            break;
+    }
+
+    getchar();
+    getchar();
     return 0;
 }
