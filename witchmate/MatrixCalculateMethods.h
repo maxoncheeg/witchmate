@@ -12,13 +12,13 @@ string translateToWolfram(vector<vector<float>>& a, vector<float>& b)
     {
         for (int j = 0; j < a[i].size(); ++j)
         {
-            if (j != 0) result += " + ";
+            if (j != 0) result += "+";
 
             result += to_string((int)a[i][j]);
             result += (char)(charCounter + j);
         }
 
-        result += " = ";
+        result += "=";
         result += to_string((int)b[i]);
         result += ";";
     }

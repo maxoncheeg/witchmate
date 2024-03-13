@@ -15,11 +15,14 @@ void firstQuest()
         {2, 1, 1, 1}
     };
 
+    
+
     auto A2 = vector(A1);
 
     vector<float> B1 = {8.00003f, 2, -1, 5};
     auto B2 = vector<float>(B1);
 
+    cout << "\n\n" << translateToWolfram(A1, B1) << "\n\n";
     chooseMainElements(A2);
 
     cout << "\t Matrix A1: " << '\n';
@@ -66,6 +69,8 @@ void secondQuest()
     vector<float> B = {18, 35, 25};
 
     float precision = 1e-7;
+    
+    cout << "\n\n" << translateToWolfram(A, B) << "\n\n";
 
     printMatrix(A, B);
 
@@ -87,15 +92,16 @@ void secondQuest()
 void thirdQuest()
 {
     vector<vector<float>> a = {
-        {1, 2, 0, 0, 0, 0},
-        {3, 3, 2, 0, 0, 0},
-        {0, 4, 2, 3, 0, 0},
-        {0, 0, 4, 3, 3, 0},
-        {0, 0, 0, 2, 2, 3},
-        {0, 0, 0, 0, 1, 2},
+        {1, 2, 0, 0, 0, 0, 0},
+        {3, 3, 2, 0, 0, 0, 0},
+        {0, 4, 2, 3, 0, 0, 0},
+        {0, 0, 4, 3, 3, 0, 0},
+        {0, 0, 0, 2, 2, 3, 0},
+        {0, 0, 0, 0, 1, 2, 5},
+        {0, 0, 0, 0, 0, 2, 2},
     };
 
-    vector<float> b = {1, 2, 3, 4, 5, 6};
+    vector<float> b = {1, 2, 3, 4, 5, 6, 7};
 
     cout << "\n\n" << translateToWolfram(a, b) << "\n\n";
 
