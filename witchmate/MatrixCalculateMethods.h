@@ -67,7 +67,7 @@ float vectorLength(vector<float> x)
 #pragma region FIRST QUEST
 
 // matrix should be square like shit maybe, so i think i do it right
-// todo: fix this shit
+
 void chooseMainElements(vector<vector<float>>& A)
 {
     for (size_t i = 0; i < A.size(); i++)
@@ -80,8 +80,6 @@ void chooseMainElements(vector<vector<float>>& A)
                     k[i] = k[j];
                     k[j] = temp;
                 }
-
-                continue;
             }
 }
 
@@ -110,7 +108,7 @@ void convertToStepwise(vector<vector<float>>& A, vector<float>& B)
                     break;
                 }
 
-            if (a == 0) continue;
+            if (a == 0) throw new runtime_error("matrix with zeros");
         }
 
         for (int k = i + 1; k < A.size(); k++)
@@ -157,8 +155,10 @@ void convertToSimpleIterations(vector<vector<float>>& A, vector<float>& B)
         for (int j = 0; j < A[i].size(); j++)
             if (j != i)
                 sum += abs(A[i][j]);
+            else if(A[i][i] == 0)
+                throw new invalid_argument("diagonal with zeros");
 
-        if (abs(A[i][i]) <= sum) throw new runtime_error("|A(ii)| < sum of |A(ij)|");
+       if (abs(A[i][i]) <= sum) throw new runtime_error("|A(ii)| < sum of |A(ij)|");
     }
 
     for (int i = 0; i < A.size(); i++)

@@ -8,7 +8,12 @@ vector<float> findThreeDiagonalXs(vector<vector<float>> A, vector<float> B)
     vector a(A.size(), vector<float>(A.size(), 0));
     vector<float> b(B.size(), 0);
 
-    // todo: check on three-diagonal-like matrix are needed
+    for (int i = 0; i < A.size(); ++i)
+        for (int j = 0; j < A[i].size(); ++j)
+            if (i == j && A[i][j] == 0)
+                throw new invalid_argument("zeros!!!");
+            else if (A[i][j] != 0 && abs(i - j) > 1)
+                throw new invalid_argument("not zeros!!!");
 
     for (int i = 0; i < A.size(); ++i)
     {
@@ -26,7 +31,7 @@ vector<float> findThreeDiagonalXs(vector<vector<float>> A, vector<float> B)
             b[i] = B[i] - A[i][i - 1] * beta; // B_i - C_i * beta
         }
 
-        if(i + 1 < a.size())
+        if (i + 1 < a.size())
             a[i][i + 1] = A[i][i + 1]; // E_i
     }
 

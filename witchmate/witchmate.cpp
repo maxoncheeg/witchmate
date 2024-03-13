@@ -8,18 +8,28 @@ using namespace std;
 
 void firstQuest()
 {
+    // vector<vector<float>> A1 = {
+    //     {2.00001f, 2, 3, 1},
+    //     {1, 1, 1, 1},
+    //     {-1, 1, -2, 1},
+    //     {2, 1, 1, 1}
+    // };
+    //
+    // auto A2 = vector(A1);
+    //
+    // vector<float> B1 = {8.00003f, 2, -1, 5};
+    // auto B2 = vector<float>(B1);
+
     vector<vector<float>> A1 = {
-        {2.00001f, 2, 3, 1},
-        {1, 1, 1, 1},
-        {-1, 1, -2, 1},
-        {2, 1, 1, 1}
+        {4, -2, 1, 1},
+        {1, 0, 2, 4},
+        {-4, 3, 0, 1},
+        {2, -1, -2, 8}
     };
-
     
-
     auto A2 = vector(A1);
-
-    vector<float> B1 = {8.00003f, 2, -1, 5};
+    
+    vector<float> B1 = {6, 8, 4, 2};
     auto B2 = vector<float>(B1);
 
     cout << "\n\n" << translateToWolfram(A1, B1) << "\n\n";
@@ -60,15 +70,23 @@ void firstQuest()
 
 void secondQuest()
 {
+    // vector<vector<float>> A = {
+    //     {10, 3, 1},
+    //     {3, 14, 2},
+    //     {-3, 2, 12}
+    // };
+    //
+    // vector<float> B = {18, 35, 25};
+
     vector<vector<float>> A = {
-        {10, 3, 1},
-        {3, 14, 2},
-        {-3, 2, 12}
+        {3, 1, 10},
+        {14, 2, 3},
+        {2, 12, -3}
     };
-
+    
     vector<float> B = {18, 35, 25};
-
-    float precision = 1e-7;
+    
+    float precision = 1e-3;
     
     cout << "\n\n" << translateToWolfram(A, B) << "\n\n";
 
@@ -94,9 +112,9 @@ void thirdQuest()
     vector<vector<float>> a = {
         {1, 2, 0, 0, 0, 0, 0},
         {3, 3, 2, 0, 0, 0, 0},
-        {0, 4, 2, 3, 0, 0, 0},
-        {0, 0, 4, 3, 3, 0, 0},
-        {0, 0, 0, 2, 2, 3, 0},
+        {0, 4, 2, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 2, 3, 0},
         {0, 0, 0, 0, 1, 2, 5},
         {0, 0, 0, 0, 0, 2, 2},
     };
