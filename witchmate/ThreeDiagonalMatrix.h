@@ -1,4 +1,6 @@
 ﻿#pragma once
+#include <fstream>
+#include <sstream>
 #include <vector>
 
 using namespace std;
@@ -47,3 +49,29 @@ vector<float> findThreeDiagonalXs(vector<vector<float>> A, vector<float> B)
 
     return xs;
 }
+
+// pair<vector<vector<float>>, vector<float>> readMatrixFromFile(string path)
+// {
+//     ifstream file;
+//     file.open(path);
+//     if (!file.is_open())
+//         throw new invalid_argument("File could not be opened");
+//     string line;
+//     vector<float> t, b;
+//     vector<vector<float>> a;
+//     while (std::getline(file, line))
+//     {
+//         istringstream iss(line);
+//         float value;
+//         if (!(iss >> value))
+//         {
+//             b.push_back(t[t.size() - 1]);
+//             t.pop_back();
+//             //a.(vector(t));
+//             break;
+//         } // error
+//         
+//         t.push_back(value);
+//         // process pair (a,b)
+//     }
+// }
