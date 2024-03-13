@@ -36,7 +36,7 @@ float getNewtonPrecision(float x, float precision) {
 	{
 		prevX = x;
 
-		printf("\t%d ��������: %.7f \n", i++, x);
+		printf("\t%d iteration: %.7f \n", i++, x);
 		x = x - f_x(x) / f_prime_x(x);
 	} while (abs(prevX - x) > precision);
 
@@ -66,7 +66,7 @@ float getSimpleIterationsValue(float x, float precision, float m,float q) {
 
 	do {
 		prevX = x;
-		printf("\t%d ��������: %.7f \n", i++, x);
+		printf("\t%d iteration: %.7f \n", i++, x);
 		x = phi(x, m);
 	} while (abs(prevX - x) > (q < 0.5 ? precision : gPrecision));
 
@@ -104,7 +104,7 @@ float getChordValue(float a, float b, float precision) {
 
 	do {
 		prevX = x;
-		printf("\t%d ��������: %.7f \n", i++, x);
+		printf("\t%d iteration: %.7f \n", i++, x);
 
 		if (isB)
 			x = x - (b - x) * f_x(x) / (f_x(b) - f_x(x));
@@ -157,14 +157,16 @@ int main() {
 	float precision = 1e-9;
 
 
-	cout << endl << "����� �������:" << endl;
+	cout << endl << "Newton method:" << endl;
 	printNewtonPrecisionValues(xs, precision);
 
-	cout << endl << "����� ������� ��������:" << endl;
+	cout << endl << "Simple iterations method:" << endl;
 	printSimpleIterationsValue(xs, precision, maxs, phiMaxs);
 
-	cout << endl << "����� ����:" << endl;
+	cout << endl << "Chord method:" << endl;
 	printChordValues(intervals, precision);
 
+	getchar();
+	getchar();
 	return 0;
 }
