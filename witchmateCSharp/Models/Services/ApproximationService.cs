@@ -3,6 +3,13 @@ using witchmateCSharp.Models.Matrix;
 
 namespace witchmateCSharp.Models.Services;
 
+public enum ApproximationMethod
+{
+    LeastSquares,
+    Lagrange,
+    Newton,
+}
+
 public class ApproximationService
 {
     public List<float> GetLeastSquaresMethodCoefficients(IFunctionSolution solution, int degree)
@@ -30,8 +37,27 @@ public class ApproximationService
             cMatrix.Add(cs[i..(i + degree + 1)]);
 
         var a = Gauss.SolveMatrix(cMatrix, ds);
-        
+
         return a;
     }
     
+    public float CalculateLagrangeFunction(IFunctionSolution solution, float x)
+    {
+        float result = 0;
+        
+        for (int i = 0; i < solution.Solves.Count; i++)
+        {
+            float multiplication = 1;
+            for (int j = 0; j < solution.Solves.Count; j++)
+            {
+                if (i == j) continue;
+                multiplication *= (x - solution.Solves.ElementAt(j).Key)
+                                  / (solution.Solves.ElementAt(i).Key - solution.Solves.ElementAt(j).Key);
+            }
+
+            result += solution.Solves.ElementAt(i).Value * multiplication;
+        }
+
+        return result;
+    }
 }

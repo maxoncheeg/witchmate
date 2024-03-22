@@ -1,8 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "SHC78jjijMpAAF9HbTSbeXf8M9jrRkH6tc4EHeXf4j3HVux2jwz2TUL1sbdgFselgyO3XQcT4Bvj5ZDX2HoJNQ==",
+  "dgSpecHash": "35aL/RU8UAuVjr3/eGpJe3rncuoXRay2jnNIIBQb5nA/t5j448DJNeIjgzucreZLI18UPFuDlYxC/FkkYuHTdw==",
   "success": true,
   "projectFilePath": "C:\\Users\\maksg\\Desktop\\CODING\\witchmate\\new\\witchmateCSharp\\witchmateCSharp\\witchmateCSharp.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\maksg\\.nuget\\packages\\oxyplot.core\\2.1.2\\oxyplot.core.2.1.2.nupkg.sha512",
+    "C:\\Users\\maksg\\.nuget\\packages\\oxyplot.wpf\\2.1.2\\oxyplot.wpf.2.1.2.nupkg.sha512",
+    "C:\\Users\\maksg\\.nuget\\packages\\oxyplot.wpf.shared\\2.1.2\\oxyplot.wpf.shared.2.1.2.nupkg.sha512"
+  ],
   "logs": []
 }

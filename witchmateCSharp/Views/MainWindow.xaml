@@ -1,0 +1,139 @@
+﻿<Window
+    Height="450"
+    Title="MainWindow"
+    Width="800"
+    WindowState="Maximized"
+    mc:Ignorable="d"
+    x:Class="witchmateCSharp.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:witchmateCSharp.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:oxxxy="http://oxyplot.org/wpf"
+    xmlns:vm="clr-namespace:witchmateCSharp.ViewModels"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Window.DataContext>
+        <vm:MainViewModel />
+    </Window.DataContext>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Grid>
+            <oxxxy:PlotView Background="FloralWhite" Model="{Binding Plot}">
+                <oxxxy:PlotView.DefaultTrackerTemplate>
+                    <ControlTemplate>
+                        <oxxxy:TrackerControl LineExtents="{Binding PlotModel.PlotArea}" Position="{Binding Position}">
+                            <oxxxy:TrackerControl.Background>
+                                <LinearGradientBrush>
+                                    <GradientStop Color="{StaticResource ColorBlackRed}" Offset="0" />
+                                    <GradientStop Color="{StaticResource ColorDarkRed}" Offset="1" />
+                                </LinearGradientBrush>
+                            </oxxxy:TrackerControl.Background>
+                            <oxxxy:TrackerControl.Content>
+                                <TextBlock
+                                    Foreground="{StaticResource Snow}"
+                                    Margin="7"
+                                    Text="{Binding}" />
+                            </oxxxy:TrackerControl.Content>
+                        </oxxxy:TrackerControl>
+                    </ControlTemplate>
+                </oxxxy:PlotView.DefaultTrackerTemplate>
+            </oxxxy:PlotView>
+        </Grid>
+
+        <DockPanel Grid.Column="1">
+            <DockPanel DockPanel.Dock="Top">
+                <Button
+                    Click="OnChangeTypesVisibility"
+                    DockPanel.Dock="Right"
+                    Height="80"
+                    Style="{StaticResource JordanButton}"
+                    Width="80">
+                    Методы
+                </Button>
+
+                <TextBlock
+                    FontFamily="Consolas"
+                    FontSize="20"
+                    FontStyle="Italic"
+                    FontWeight="Bold"
+                    Text="{Binding CurrentMethod}"
+                    TextAlignment="Center"
+                    TextWrapping="Wrap"
+                    VerticalAlignment="Center">
+                    <TextBlock.Foreground>
+                        <LinearGradientBrush>
+                            <GradientStop Color="{StaticResource ColorBlackRed}" Offset="0" />
+                            <GradientStop Color="{StaticResource ColorDarkRed}" Offset="1" />
+                        </LinearGradientBrush>
+                    </TextBlock.Foreground>
+                </TextBlock>
+            </DockPanel>
+
+            <Grid
+                Background="{StaticResource SnowRed}"
+                DockPanel.Dock="Top"
+                Name="typeGrid">
+                <ListBox
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    HorizontalContentAlignment="Stretch"
+                    ItemContainerStyle="{StaticResource SelectionList}"
+                    ItemsSource="{Binding MethodsNames, Mode=OneWay}"
+                    Margin="1"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    SelectedIndex="{Binding ListSelectedIndex}"
+                    x:Name="testListBox">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Label
+                                Content="{Binding Path=Value}"
+                                FontFamily="Consolas"
+                                FontSize="16"
+                                FontWeight="Bold"
+                                Foreground="{StaticResource Snow}">
+                                <Label.InputBindings>
+                                    <MouseBinding
+                                        Command="{Binding Path=DataContext.ChooseType, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
+                                        CommandParameter="{Binding Path=Key}"
+                                        MouseAction="LeftClick" />
+                                </Label.InputBindings>
+                            </Label>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+            <Grid />
+
+            <DockPanel
+                DockPanel.Dock="Top"
+                Margin="50,10"
+                Visibility="{Binding DegreeVisibility}">
+                <TextBox
+                    DockPanel.Dock="Right"
+                    FontFamily="Consolas"
+                    FontSize="18"
+                    FontWeight="Bold"
+                    Foreground="{StaticResource Red}"
+                    MouseWheel="OnMouseWheel"
+                    PreviewTextInput="OnPreviewTextInput"
+                    Text="{Binding Degree}"
+                    TextAlignment="Center"
+                    Width="40" />
+
+                <Label
+                    DockPanel.Dock="Left"
+                    FontFamily="Consolas"
+                    FontSize="18"
+                    FontWeight="Bold"
+                    Foreground="{StaticResource Red}">
+                    СТЕПЕНЬ
+                </Label>
+            </DockPanel>
+
+            <Grid />
+        </DockPanel>
+    </Grid>
+</Window>
