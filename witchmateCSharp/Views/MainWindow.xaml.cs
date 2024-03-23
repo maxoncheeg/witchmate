@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Collections.Immutable;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using witchmateCSharp.ViewModels;
@@ -28,7 +29,9 @@ public partial class MainWindow : Window
 
     private void OnPreviewTextInput(object sender, TextCompositionEventArgs e)
     {
-        if (!char.IsDigit(e.Text, 0)) e.Handled = true;
+        if (!char.IsDigit(e.Text, 0) && e.Text[0] != ',' && e.Text[0] != '-') e.Handled = true;
+        else if ( e.Text[0] == ',' && ((sender as TextBox)!).Text.IndexOf(',') > -1) e.Handled = true;
+        else if (e.Text[0] == '-' && ((sender as TextBox)!).Text.Length > 0) e.Handled = true;
     }
 
     private void OnMouseWheel(object sender, MouseWheelEventArgs e)
@@ -37,17 +40,13 @@ public partial class MainWindow : Window
         {
             int degree = int.Parse(box.Text);
             if (e.Delta > 0)
-            {
                 degree++;
-            }
             else
-            {
                 if(degree - 1 >= 0)
                     degree--;
-            }
 
             box.Text = degree.ToString();
-            (DataContext as MainViewModel).Degree = box.Text;
+            ((DataContext as MainViewModel)!).Degree = box.Text;
         }
     }
 }

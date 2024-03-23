@@ -11,18 +11,22 @@ namespace witchmateCSharp.ViewModels;
 
 public class MainViewModel : ViewModel
 {
-    private ApproximationService _approximationService = new();
+    private readonly ApproximationService _approximationService = new();
     private int _degree;
+    private readonly Dictionary<float, float> _valuesDictionary;
 
-    private Visibility _degreeVisibility;
+    #region Bindings
+
+    private string _a = string.Empty;
+    private string _x = string.Empty;
+    private string _y = string.Empty;
+    private Visibility _degreeVisibility = Visibility.Visible;
     private string _currentMethod = string.Empty;
-    private string _textFunction = string.Empty;
     private string _textDegree;
     private PlotModel _plot;
     private ObservableCollection<KeyValuePair<ApproximationMethod, string>> _methodsNames;
     private ObservableCollection<KeyValuePair<float, float>> _values;
-
-    #region Bindings
+    private ObservableCollection<Tuple<int, float>> _coefficients;
 
     public Visibility DegreeVisibility
     {
@@ -39,7 +43,7 @@ public class MainViewModel : ViewModel
             {
                 if (degree >= 0)
                     _degree = degree;
-                if (_methodsNames.First(kv => kv.Value == CurrentMethod).Key == ApproximationMethod.LeastSquares)
+                if (_methodsNames.FirstOrDefault(kv => kv.Value == CurrentMethod).Key == ApproximationMethod.LeastSquares)
                 {
                     ChooseTypeMethod(ApproximationMethod.LeastSquares);
                 }
@@ -53,10 +57,22 @@ public class MainViewModel : ViewModel
         private set => SetField(ref _plot, value);
     }
 
-    public string TextFunction
+    public string X
     {
-        get => _textFunction;
-        private set => SetField(ref _textFunction, value);
+        get => _x;
+        set => SetField(ref _x, value);
+    }
+
+    public string A
+    {
+        get => _a;
+        set => SetField(ref _a, value);
+    }
+
+    public string Y
+    {
+        get => _y;
+        set => SetField(ref _y, value);
     }
 
     public string CurrentMethod
@@ -69,6 +85,12 @@ public class MainViewModel : ViewModel
     {
         get => _methodsNames;
         private set => SetField(ref _methodsNames, value);
+    }
+
+    public ObservableCollection<Tuple<int, float>> Coefficients
+    {
+        get => _coefficients;
+        private set => SetField(ref _coefficients, value);
     }
 
     public ObservableCollection<KeyValuePair<float, float>> Values
@@ -87,7 +109,7 @@ public class MainViewModel : ViewModel
     {
         IFunctionSolution solution = new FunctionSolution([.._values]);
 
-        
+
         if (parameter is ApproximationMethod method)
         {
             DegreeVisibility = method == ApproximationMethod.LeastSquares ? Visibility.Visible : Visibility.Collapsed;
@@ -110,9 +132,118 @@ public class MainViewModel : ViewModel
                     name = _methodsNames.First(item => item.Key == ApproximationMethod.Lagrange).Value;
                     CurrentMethod = name;
                     break;
-                default:
-                    break;
             }
+        }
+    }
+
+    public RelayCommand DeletePoint => new(DeletePointMethod);
+
+    private void DeletePointMethod(object parameter)
+    {
+        if (parameter is float x && _valuesDictionary.ContainsKey(x))
+        {
+            _valuesDictionary.Remove(x);
+            Values = new(_valuesDictionary.ToList());
+
+            var key = _methodsNames.First(kv => kv.Value == CurrentMethod).Key;
+
+            ChooseTypeMethod(key);
+        }
+    }
+
+    public RelayCommand AddPoint => new(AddPointMethod);
+
+    private void AddPointMethod(object? parameter)
+    {
+        if (float.TryParse(X, out var x) && float.TryParse(Y, out var y))
+        {
+            if (_valuesDictionary.ContainsKey(x)) return;
+            _valuesDictionary.Add(x, y);
+            var xs = (from i in _valuesDictionary select i.Key).ToList();
+            xs.Sort();
+
+            List<KeyValuePair<float, float>> list = new();
+            foreach (var t in xs)
+            {
+                list.Add(new(t, _valuesDictionary[t]));
+            }
+
+            Values = new(list);
+            X = string.Empty;
+            Y = string.Empty;
+
+            var key = _methodsNames.First(kv => kv.Value == CurrentMethod).Key;
+
+            ChooseTypeMethod(key);
+        }
+    }
+
+    public RelayCommand AddCoefficient => new(AddCoefficientMethod);
+
+    private void AddCoefficientMethod(object? parameter)
+    {
+        if (float.TryParse(_a, out var value))
+        {
+            _coefficients.Add(new(_coefficients.Count, value));
+            A = string.Empty;
+        }
+    }
+
+    public RelayCommand DeleteCoefficient => new(DeleteCoefficientMethod);
+
+    private void DeleteCoefficientMethod(object? parameter)
+    {
+        if (parameter is int index)
+        {
+            if (_coefficients.FirstOrDefault(tuple => tuple.Item1 == index) is { } item)
+            {
+                _coefficients.Remove(item);
+
+                index = 0;
+                List<Tuple<int, float>> list = [];
+                foreach (var tuple in _coefficients)
+                    list.Add(new(index++, tuple.Item2));
+
+                Coefficients = new(list);
+            }
+        }
+    }
+
+    public RelayCommand UpCoefficient => new(UpCoefficientMethod);
+
+    private void UpCoefficientMethod(object? parameter)
+    {
+        if (parameter is int index && index != 0)
+        {
+            List<Tuple<int, float>> list = [.._coefficients];
+
+            (list[index - 1], list[index]) =
+                (new Tuple<int, float>(index - 1, _coefficients[index].Item2),
+                    new Tuple<int, float>(index, _coefficients[index - 1].Item2));
+
+            Coefficients = new(list);
+            var key = _methodsNames.First(kv => kv.Value == CurrentMethod).Key;
+
+            ChooseTypeMethod(key);
+        }
+    }
+
+    public RelayCommand DownCoefficient => new(DownCoefficientMethod);
+
+    private void DownCoefficientMethod(object? parameter)
+    {
+        if (parameter is int index && index != _coefficients.Count - 1)
+        {
+            List<Tuple<int, float>> list = [.._coefficients];
+
+            (list[index + 1], list[index]) =
+                (new Tuple<int, float>(index + 1, _coefficients[index].Item2),
+                    new Tuple<int, float>(index, _coefficients[index + 1].Item2));
+
+            Coefficients = new(list);
+            var key = _methodsNames.First(kv => kv.Value == CurrentMethod).Key;
+
+            ChooseTypeMethod(key);
         }
     }
 
@@ -126,23 +257,28 @@ public class MainViewModel : ViewModel
             new(ApproximationMethod.Lagrange, "Интерполяционный многочлен Лагранжа"),
             new(ApproximationMethod.Newton, "Интерполяционный многочлен Ньютона"),
         ];
-        
-        Values =
+
+        _valuesDictionary = new()
+        {
+            { -1, -1 }, { 0, 2 }, { 2, 10 }, { 3, 10 }, { 4, 15 }
+        };
+        Values = new(_valuesDictionary.ToList());
+        Coefficients =
         [
-            new(-1, -1),
-            new(0, 2),
-            new(2, 10),
-            new(3, 10),
-            new(4, 15)
+            new(0, 2f),
+            new(1, 349f / 60f),
+            new(2, 41f / 40f),
+            new(3, -91f / 60f),
+            new(4, 11f / 40f),
         ];
+        
+        Degree = "0";
         ChooseTypeMethod(ApproximationMethod.LeastSquares);
-        Degree = "1";
     }
 
     private void MakeLeastSquares(IFunctionSolution solution, int degree)
     {
         var a = _approximationService.GetLeastSquaresMethodCoefficients(solution, degree);
-        a.Reverse();
 
         Func<double, double> function = (x) => a.Select((value, i) => value * (float)Math.Pow(x, i)).Sum();
 
@@ -150,37 +286,8 @@ public class MainViewModel : ViewModel
 
         FunctionSeries functionSeries = new(function, solution.Solves.First().Key, solution.Solves.Last().Key, 1e-2,
             "Метод наименьших квадратов");
-        FunctionSeries points = new();
-        FunctionSeries ourPoints = new();
 
-        foreach (var item in solution.Solves)
-        {
-            points.Points.Add(new DataPoint(item.Key, item.Value));
-            ourPoints.Points.Add(new DataPoint(item.Key, function(item.Key)));
-        }
-
-        points.Title = "Изначальные точки";
-        points.MarkerType = MarkerType.Circle;
-        points.MarkerSize = 4;
-        points.LineStyle = LineStyle.None;
-
-        ourPoints.Color = OxyColors.Transparent;
-        ourPoints.SeriesGroupName = "Точки графика";
-        ourPoints.MarkerType = MarkerType.Diamond;
-        ourPoints.MarkerSize = 6;
-        ourPoints.LineStyle = LineStyle.None;
-
-
-        model.Series.Add(functionSeries);
-        model.Series.Add(points);
-        model.Series.Add(ourPoints);
-
-        model.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title = "x" });
-        model.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = "f(x)" });
-
-        model.Title = "Метод наименьших квадратов";
-        model.Subtitle = "Сравнение заданных точек и получившегося графика";
-        Plot = model;
+        MakePlot(solution, functionSeries);
     }
 
     private void MakeLagrange(IFunctionSolution solution)
@@ -189,24 +296,8 @@ public class MainViewModel : ViewModel
 
         FunctionSeries functionSeries = new((x) => _approximationService.CalculateLagrangeFunction(solution, (float)x),
             solution.Solves.First().Key, solution.Solves.Last().Key, 1e-2, "Интерполяционный многочлен Лагранжа");
-        FunctionSeries points = new();
 
-        foreach (var item in solution.Solves)
-            points.Points.Add(new DataPoint(item.Key, item.Value));
-
-        points.Title = "Изначальные точки";
-        points.MarkerType = MarkerType.Circle;
-        points.MarkerSize = 4;
-        points.LineStyle = LineStyle.None;
-
-        model.Series.Add(functionSeries);
-        model.Series.Add(points);
-
-        model.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title = "x" });
-        model.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = "f(x)" });
-        model.Title = "Интерполяционный член Лагранжа";
-        model.Subtitle = "Сравнение заданных точек и получившегося графика";
-        Plot = model;
+        MakePlot(solution, functionSeries);
     }
 
     private void MakeNewton(IFunctionSolution solution)
@@ -217,7 +308,15 @@ public class MainViewModel : ViewModel
 
         FunctionSeries functionSeries = new(
             (x) => _approximationService.CalculateNewtonFunction(dividedDiff, solution, (float)x),
-            solution.Solves.First().Key, solution.Solves.Last().Key, 1e-2, "Интерполяционный многочлен Лагранжа");
+            solution.Solves.First().Key, solution.Solves.Last().Key, 1e-2, "Интерполяционный многочлен Ньютона");
+
+        MakePlot(solution, functionSeries);
+    }
+
+    private void MakePlot(IFunctionSolution solution, FunctionSeries functionSeries)
+    {
+        PlotModel model = new();
+
         FunctionSeries points = new();
 
         foreach (var item in solution.Solves)
@@ -226,29 +325,36 @@ public class MainViewModel : ViewModel
         points.Title = "Изначальные точки";
         points.MarkerType = MarkerType.Circle;
         points.MarkerSize = 4;
+        points.Color = OxyColor.FromRgb(147, 0, 52);
         points.LineStyle = LineStyle.None;
 
+        functionSeries.Color = OxyColor.FromRgb(239, 89, 118);
+
         model.Series.Add(functionSeries);
+
+
+        if (_coefficients.Count > 0)
+        {
+            Func<double, double> function = (x) =>
+                _coefficients.Select((tuple) => tuple.Item2 * (float)Math.Pow(x, tuple.Item1)).Sum();
+
+            FunctionSeries series = new(function,
+                solution.Solves.First().Key, solution.Solves.Last().Key, 1e-2, "Интерполяционный многочлен 4 степени")
+            {
+                LineStyle = LineStyle.Dash,
+                Color = OxyColor.FromRgb(255, 177, 67)
+            };
+
+            model.Series.Add(series);
+        }
+
         model.Series.Add(points);
 
         model.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title = "x" });
         model.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = "f(x)" });
-        model.Title = "Интерполяционный член Ньютона";
+
+        model.Title = functionSeries.Title;
         model.Subtitle = "Сравнение заданных точек и получившегося графика";
         Plot = model;
-    }
-
-    private string MakeTextFunction(List<float> a)
-    {
-        string result = "f(x) = ";
-
-        for (int i = a.Count - 1; i >= 0; i--)
-        {
-            result += $"{a[i]} * x^{i}";
-            if (i != 0)
-                result += " + ";
-        }
-
-        return result;
     }
 }

@@ -1,7 +1,9 @@
 ﻿<Window
-    Height="450"
+    Height="720"
+    MinHeight="720"
+    MinWidth="1280"
     Title="MainWindow"
-    Width="800"
+    Width="1280"
     WindowState="Maximized"
     mc:Ignorable="d"
     x:Class="witchmateCSharp.Views.MainWindow"
@@ -16,7 +18,7 @@
     </Window.DataContext>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1.5*" />
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
         <Grid>
@@ -136,72 +138,228 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
+                <DockPanel>
+                    <Label
+                        DockPanel.Dock="Top"
+                        FontFamily="Consolas"
+                        FontWeight="Bold"
+                        Foreground="{StaticResource Red}"
+                        Grid.ColumnSpan="2">
+                        ТОЧКИ
+                    </Label>
 
-                    <ListBox
-                        Background="Transparent"
-                        BorderBrush="Transparent"
-                        HorizontalContentAlignment="Stretch"
-                        ItemContainerStyle="{StaticResource SelectionList}"
-                        ItemsSource="{Binding Values, Mode=OneWay}"
-                        Margin="1"
-                        ScrollViewer.VerticalScrollBarVisibility="Hidden">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <UniformGrid Rows="1">
-                                    <UniformGrid.InputBindings>
-                                        <MouseBinding
-                                            Command="{Binding Path=DataContext.ChooseType, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
-                                            CommandParameter="{Binding Path=Key}"
-                                            MouseAction="LeftDoubleClick" />
-                                    </UniformGrid.InputBindings>
-                                    <DockPanel>
-                                        <Label
-                                            FontFamily="Consolas"
-                                            FontSize="15"
-                                            FontWeight="Bold"
-                                            Foreground="{StaticResource Snow}">
-                                            x:
-                                        </Label>
-                                        <Viewbox>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <ListBox
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            Grid.Column="0"
+                            HorizontalContentAlignment="Stretch"
+                            ItemContainerStyle="{StaticResource SelectionList}"
+                            ItemsSource="{Binding Values, Mode=OneWay}"
+                            Margin="1"
+                            ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <UniformGrid Rows="1">
+                                        <UniformGrid.InputBindings>
+                                            <MouseBinding
+                                                Command="{Binding Path=DataContext.DeletePoint, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
+                                                CommandParameter="{Binding Path=Key}"
+                                                MouseAction="LeftDoubleClick" />
+                                        </UniformGrid.InputBindings>
+
+                                        <DockPanel>
                                             <Label
-                                                Content="{Binding Key}"
                                                 FontFamily="Consolas"
                                                 FontSize="15"
-                                                Foreground="{StaticResource Snow}" />
-                                        </Viewbox>
-                                    </DockPanel>
-                                    <DockPanel>
-                                        <Label
-                                            FontFamily="Consolas"
-                                            FontSize="15"
-                                            FontWeight="Bold"
-                                            Foreground="{StaticResource Snow}">
-                                            f(x):
-                                        </Label>
-                                        <Viewbox>
+                                                FontWeight="Bold"
+                                                Foreground="{StaticResource Snow}">
+                                                x:
+                                            </Label>
+                                            <Viewbox>
+                                                <Label
+                                                    Content="{Binding Key}"
+                                                    FontFamily="Consolas"
+                                                    FontSize="15"
+                                                    Foreground="{StaticResource Snow}" />
+                                            </Viewbox>
+                                        </DockPanel>
+                                        <DockPanel>
                                             <Label
-                                                Content="{Binding Value}"
                                                 FontFamily="Consolas"
                                                 FontSize="15"
-                                                Foreground="{StaticResource Snow}" />
-                                        </Viewbox>
-                                    </DockPanel>
-                                </UniformGrid>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </Grid>
+                                                FontWeight="Bold"
+                                                Foreground="{StaticResource Snow}">
+                                                f(x):
+                                            </Label>
+                                            <Viewbox>
+                                                <Label
+                                                    Content="{Binding Value}"
+                                                    FontFamily="Consolas"
+                                                    FontSize="15"
+                                                    Foreground="{StaticResource Snow}" />
+                                            </Viewbox>
+                                        </DockPanel>
+                                    </UniformGrid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
 
-                <Grid Grid.Row="1">
-                    <ListBox>але2</ListBox>
-                </Grid>
+                        <StackPanel Grid.Column="1" Orientation="Vertical">
+                            <DockPanel Margin="20,10">
+                                <Label
+                                    DockPanel.Dock="Left"
+                                    FontFamily="Consolas"
+                                    FontSize="17"
+                                    FontWeight="Bold"
+                                    Foreground="{StaticResource Red}"
+                                    Grid.ColumnSpan="2">
+                                    X
+                                </Label>
+                                <TextBox
+                                    FontSize="17"
+                                    PreviewTextInput="OnPreviewTextInput"
+                                    Text="{Binding X}"
+                                    TextAlignment="Center" />
+                            </DockPanel>
+                            <DockPanel Margin="20,10">
+                                <Label
+                                    DockPanel.Dock="Left"
+                                    FontFamily="Consolas"
+                                    FontSize="17"
+                                    FontWeight="Bold"
+                                    Foreground="{StaticResource Red}"
+                                    Grid.ColumnSpan="2">
+                                    Y
+                                </Label>
+                                <TextBox
+                                    FontSize="17"
+                                    PreviewTextInput="OnPreviewTextInput"
+                                    Text="{Binding Y}"
+                                    TextAlignment="Center" />
+                            </DockPanel>
+                            <Button
+                                Command="{Binding AddPoint}"
+                                Content="Добавить точку"
+                                FontSize="17"
+                                Height="50"
+                                Margin="10"
+                                Style="{StaticResource JordanButton}" />
+                        </StackPanel>
+                    </Grid>
+                </DockPanel>
+
+                <DockPanel Grid.Row="1">
+                    <Label
+                        DockPanel.Dock="Top"
+                        FontFamily="Consolas"
+                        FontWeight="Bold"
+                        Foreground="{StaticResource Red}"
+                        Grid.ColumnSpan="2">
+                        КОЭФФИЦИЭНТЫ
+                    </Label>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <ListBox
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            Grid.Column="0"
+                            HorizontalContentAlignment="Stretch"
+                            ItemContainerStyle="{StaticResource SelectionList}"
+                            ItemsSource="{Binding Coefficients, Mode=OneWay}"
+                            Margin="1"
+                            ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <UniformGrid Rows="1">
+                                        <UniformGrid.InputBindings>
+                                            <MouseBinding
+                                                Command="{Binding Path=DataContext.UpCoefficient, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
+                                                CommandParameter="{Binding Path=Item1}"
+                                                MouseAction="LeftClick" />
+                                            <MouseBinding
+                                                Command="{Binding Path=DataContext.DownCoefficient, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
+                                                CommandParameter="{Binding Path=Item1}"
+                                                MouseAction="RightClick" />
+                                            <MouseBinding
+                                                Command="{Binding Path=DataContext.DeleteCoefficient, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
+                                                CommandParameter="{Binding Path=Item1}"
+                                                MouseAction="MiddleClick" />
+                                        </UniformGrid.InputBindings>
+
+                                        <DockPanel>
+                                            <Label
+                                                FontFamily="Consolas"
+                                                FontSize="15"
+                                                FontWeight="Bold"
+                                                Foreground="{StaticResource Snow}">
+                                                a
+                                            </Label>
+                                            <Label
+                                                Content="{Binding Item1}"
+                                                FontFamily="Consolas"
+                                                FontSize="15"
+                                                FontWeight="Bold"
+                                                Foreground="{StaticResource Snow}" />
+                                            <Label
+                                                FontFamily="Consolas"
+                                                FontSize="15"
+                                                FontWeight="Bold"
+                                                Foreground="{StaticResource Snow}">
+                                                :
+                                            </Label>
+                                            <Viewbox>
+                                                <Label
+                                                    Content="{Binding Item2}"
+                                                    FontFamily="Consolas"
+                                                    FontSize="15"
+                                                    Foreground="{StaticResource Snow}" />
+                                            </Viewbox>
+                                        </DockPanel>
+                                    </UniformGrid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <StackPanel Grid.Column="1" Orientation="Vertical">
+                            <DockPanel Margin="20,10">
+                                <Label
+                                    DockPanel.Dock="Left"
+                                    FontFamily="Consolas"
+                                    FontSize="17"
+                                    FontWeight="Bold"
+                                    Foreground="{StaticResource Red}"
+                                    Grid.ColumnSpan="2">
+                                    a
+                                </Label>
+                                <TextBox
+                                    FontSize="17"
+                                    PreviewTextInput="OnPreviewTextInput"
+                                    Text="{Binding A}"
+                                    TextAlignment="Center" />
+                            </DockPanel>
+
+                            <Button
+                                Command="{Binding AddCoefficient}"
+                                Content="Добавить коэффициэнт"
+                                FontSize="17"
+                                Height="50"
+                                Margin="10"
+                                Style="{StaticResource JordanButton}" />
+                        </StackPanel>
+                    </Grid>
+                </DockPanel>
             </Grid>
-
         </DockPanel>
     </Grid>
 </Window>
