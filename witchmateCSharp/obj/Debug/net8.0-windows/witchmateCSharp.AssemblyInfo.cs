@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("witchmateCSharp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ff914e33ee49dbaf2af40fe78cc92485d4c354f5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d4deb5dac7ab40c75ed46a5ef94d810f59880115")]
 [assembly: System.Reflection.AssemblyProductAttribute("witchmateCSharp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("witchmateCSharp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

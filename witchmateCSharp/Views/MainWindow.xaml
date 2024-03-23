@@ -7,7 +7,6 @@
     x:Class="witchmateCSharp.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:witchmateCSharp.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:oxxxy="http://oxyplot.org/wpf"
     xmlns:vm="clr-namespace:witchmateCSharp.ViewModels"
@@ -75,7 +74,7 @@
             <Grid
                 Background="{StaticResource SnowRed}"
                 DockPanel.Dock="Top"
-                Name="typeGrid">
+                Name="TypeGrid">
                 <ListBox
                     Background="Transparent"
                     BorderBrush="Transparent"
@@ -83,9 +82,7 @@
                     ItemContainerStyle="{StaticResource SelectionList}"
                     ItemsSource="{Binding MethodsNames, Mode=OneWay}"
                     Margin="1"
-                    ScrollViewer.VerticalScrollBarVisibility="Auto"
-                    SelectedIndex="{Binding ListSelectedIndex}"
-                    x:Name="testListBox">
+                    ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <Label
@@ -133,7 +130,78 @@
                 </Label>
             </DockPanel>
 
-            <Grid />
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <ListBox
+                        Background="Transparent"
+                        BorderBrush="Transparent"
+                        HorizontalContentAlignment="Stretch"
+                        ItemContainerStyle="{StaticResource SelectionList}"
+                        ItemsSource="{Binding Values, Mode=OneWay}"
+                        Margin="1"
+                        ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <UniformGrid Rows="1">
+                                    <UniformGrid.InputBindings>
+                                        <MouseBinding
+                                            Command="{Binding Path=DataContext.ChooseType, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}"
+                                            CommandParameter="{Binding Path=Key}"
+                                            MouseAction="LeftDoubleClick" />
+                                    </UniformGrid.InputBindings>
+                                    <DockPanel>
+                                        <Label
+                                            FontFamily="Consolas"
+                                            FontSize="15"
+                                            FontWeight="Bold"
+                                            Foreground="{StaticResource Snow}">
+                                            x:
+                                        </Label>
+                                        <Viewbox>
+                                            <Label
+                                                Content="{Binding Key}"
+                                                FontFamily="Consolas"
+                                                FontSize="15"
+                                                Foreground="{StaticResource Snow}" />
+                                        </Viewbox>
+                                    </DockPanel>
+                                    <DockPanel>
+                                        <Label
+                                            FontFamily="Consolas"
+                                            FontSize="15"
+                                            FontWeight="Bold"
+                                            Foreground="{StaticResource Snow}">
+                                            f(x):
+                                        </Label>
+                                        <Viewbox>
+                                            <Label
+                                                Content="{Binding Value}"
+                                                FontFamily="Consolas"
+                                                FontSize="15"
+                                                Foreground="{StaticResource Snow}" />
+                                        </Viewbox>
+                                    </DockPanel>
+                                </UniformGrid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+
+                <Grid Grid.Row="1">
+                    <ListBox>але2</ListBox>
+                </Grid>
+            </Grid>
+
         </DockPanel>
     </Grid>
 </Window>

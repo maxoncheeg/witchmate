@@ -23,7 +23,7 @@ public partial class MainWindow : Window
     private void ChangeTypesVisibility()
     {
         _isTypesVisible = !_isTypesVisible;
-        typeGrid.Visibility = _isTypesVisible ? Visibility.Visible : Visibility.Collapsed;
+        TypeGrid.Visibility = _isTypesVisible ? Visibility.Visible : Visibility.Collapsed;
     }
 
     private void OnPreviewTextInput(object sender, TextCompositionEventArgs e)

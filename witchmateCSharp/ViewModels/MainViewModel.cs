@@ -20,6 +20,7 @@ public class MainViewModel : ViewModel
     private string _textDegree;
     private PlotModel _plot;
     private ObservableCollection<KeyValuePair<ApproximationMethod, string>> _methodsNames;
+    private ObservableCollection<KeyValuePair<float, float>> _values;
 
     #region Bindings
 
@@ -28,11 +29,12 @@ public class MainViewModel : ViewModel
         get => _degreeVisibility;
         private set => SetField(ref _degreeVisibility, value);
     }
-    
+
     public string Degree
     {
         get => _textDegree;
-        set {
+        set
+        {
             if (SetField(ref _textDegree, value) && int.TryParse(_textDegree, out var degree))
             {
                 if (degree >= 0)
@@ -69,6 +71,12 @@ public class MainViewModel : ViewModel
         private set => SetField(ref _methodsNames, value);
     }
 
+    public ObservableCollection<KeyValuePair<float, float>> Values
+    {
+        get => _values;
+        private set => SetField(ref _values, value);
+    }
+
     #endregion
 
     #region Commands
@@ -77,14 +85,9 @@ public class MainViewModel : ViewModel
 
     private void ChooseTypeMethod(object parameter)
     {
-        IFunctionSolution solution = new FunctionSolution([
-            new(-1, -1),
-            new(0, 2),
-            new(2, 10),
-            new(3, 10),
-            new(4, 15),
-        ]);
+        IFunctionSolution solution = new FunctionSolution([.._values]);
 
+        
         if (parameter is ApproximationMethod method)
         {
             DegreeVisibility = method == ApproximationMethod.LeastSquares ? Visibility.Visible : Visibility.Collapsed;
@@ -95,10 +98,15 @@ public class MainViewModel : ViewModel
                     MakeLeastSquares(solution, _degree);
                     name = _methodsNames.First(item => item.Key == ApproximationMethod.LeastSquares).Value;
                     CurrentMethod = name;
-                    
+
                     break;
                 case ApproximationMethod.Lagrange:
                     MakeLagrange(solution);
+                    name = _methodsNames.First(item => item.Key == ApproximationMethod.Lagrange).Value;
+                    CurrentMethod = name;
+                    break;
+                case ApproximationMethod.Newton:
+                    MakeNewton(solution);
                     name = _methodsNames.First(item => item.Key == ApproximationMethod.Lagrange).Value;
                     CurrentMethod = name;
                     break;
@@ -118,7 +126,15 @@ public class MainViewModel : ViewModel
             new(ApproximationMethod.Lagrange, "Интерполяционный многочлен Лагранжа"),
             new(ApproximationMethod.Newton, "Интерполяционный многочлен Ньютона"),
         ];
-
+        
+        Values =
+        [
+            new(-1, -1),
+            new(0, 2),
+            new(2, 10),
+            new(3, 10),
+            new(4, 15)
+        ];
         ChooseTypeMethod(ApproximationMethod.LeastSquares);
         Degree = "1";
     }
@@ -189,6 +205,35 @@ public class MainViewModel : ViewModel
         model.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title = "x" });
         model.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = "f(x)" });
         model.Title = "Интерполяционный член Лагранжа";
+        model.Subtitle = "Сравнение заданных точек и получившегося графика";
+        Plot = model;
+    }
+
+    private void MakeNewton(IFunctionSolution solution)
+    {
+        PlotModel model = new();
+
+        var dividedDiff = _approximationService.GetNewtonDividedDifference(solution);
+
+        FunctionSeries functionSeries = new(
+            (x) => _approximationService.CalculateNewtonFunction(dividedDiff, solution, (float)x),
+            solution.Solves.First().Key, solution.Solves.Last().Key, 1e-2, "Интерполяционный многочлен Лагранжа");
+        FunctionSeries points = new();
+
+        foreach (var item in solution.Solves)
+            points.Points.Add(new DataPoint(item.Key, item.Value));
+
+        points.Title = "Изначальные точки";
+        points.MarkerType = MarkerType.Circle;
+        points.MarkerSize = 4;
+        points.LineStyle = LineStyle.None;
+
+        model.Series.Add(functionSeries);
+        model.Series.Add(points);
+
+        model.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title = "x" });
+        model.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = "f(x)" });
+        model.Title = "Интерполяционный член Ньютона";
         model.Subtitle = "Сравнение заданных точек и получившегося графика";
         Plot = model;
     }

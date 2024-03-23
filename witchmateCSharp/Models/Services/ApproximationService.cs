@@ -40,11 +40,11 @@ public class ApproximationService
 
         return a;
     }
-    
+
     public float CalculateLagrangeFunction(IFunctionSolution solution, float x)
     {
         float result = 0;
-        
+
         for (int i = 0; i < solution.Solves.Count; i++)
         {
             float multiplication = 1;
@@ -56,6 +56,49 @@ public class ApproximationService
             }
 
             result += solution.Solves.ElementAt(i).Value * multiplication;
+        }
+
+        return result;
+    }
+
+    public Dictionary<int, List<float>> GetNewtonDividedDifference(IFunctionSolution solution)
+    {
+        List<float> xs = solution.Solves.Select(pair => pair.Key).ToList();
+        Dictionary<int, List<float>> steps = [];
+        steps.Add(0, []);
+
+        foreach (var pair in solution.Solves)
+            steps[0].Add(pair.Value);
+
+        int current = 0;
+        do
+        {
+            steps.Add(current + 1, []);
+
+            for (int i = 0; i < steps[current].Count - 1; i++)
+            {
+                float f = (steps[current][i] - steps[current][i + 1]) / (xs[i] - xs[i + current + 1]);
+                steps[current + 1].Add(f);
+            }
+        } while (steps[++current].Count != 1);
+
+        return steps;
+    }
+
+    public float CalculateNewtonFunction(Dictionary<int, List<float>> steps, IFunctionSolution solution, float x)
+    {
+        if (steps.Count != solution.Solves.Count) throw new ArgumentException();
+        
+        List<float> xs = solution.Solves.Select(pair => pair.Key).ToList();
+        float result = steps[0][0];
+        
+        for (int i = 1; i < steps.Count; i++)
+        {
+            float multiple = 1;
+            for (int j = 0; j < i; j++)
+                multiple *= (x - xs[j]);
+            multiple *= steps[i][0];
+            result += multiple;
         }
 
         return result;
