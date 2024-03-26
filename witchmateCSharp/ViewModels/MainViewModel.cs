@@ -186,6 +186,9 @@ public class MainViewModel : ViewModel
         {
             _coefficients.Add(new(_coefficients.Count, value));
             A = string.Empty;
+            var key = _methodsNames.First(kv => kv.Value == CurrentMethod).Key;
+
+            ChooseTypeMethod(key);
         }
     }
 
@@ -205,6 +208,9 @@ public class MainViewModel : ViewModel
                     list.Add(new(index++, tuple.Item2));
 
                 Coefficients = new(list);
+                var key = _methodsNames.First(kv => kv.Value == CurrentMethod).Key;
+
+                ChooseTypeMethod(key);
             }
         }
     }
@@ -280,14 +286,22 @@ public class MainViewModel : ViewModel
     {
         var a = _approximationService.GetLeastSquaresMethodCoefficients(solution, degree);
 
-        Func<double, double> function = (x) => a.Select((value, i) => value * (float)Math.Pow(x, i)).Sum();
+        if (a is null)
+        {
+            MessageBox.Show("Не удалось рассчитать матрицу", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            Degree = "0";
+            return;
+        }
 
         PlotModel model = new();
 
-        FunctionSeries functionSeries = new(function, solution.Solves.First().Key, solution.Solves.Last().Key, 1e-2,
+        FunctionSeries functionSeries = new(PFunc, solution.Solves.First().Key, solution.Solves.Last().Key, 1e-2,
             "Метод наименьших квадратов");
 
         MakePlot(solution, functionSeries);
+        return;
+
+        double PFunc(double x) => a.Select((value, i) => value * (float)Math.Pow(x, i)).Sum();
     }
 
     private void MakeLagrange(IFunctionSolution solution)
@@ -335,10 +349,9 @@ public class MainViewModel : ViewModel
 
         if (_coefficients.Count > 0)
         {
-            Func<double, double> function = (x) =>
-                _coefficients.Select((tuple) => tuple.Item2 * (float)Math.Pow(x, tuple.Item1)).Sum();
+            double Function(double x) => _coefficients.Select((tuple) => tuple.Item2 * (float)Math.Pow(x, tuple.Item1)).Sum();
 
-            FunctionSeries series = new(function,
+            FunctionSeries series = new(Function,
                 solution.Solves.First().Key, solution.Solves.Last().Key, 1e-2, "Интерполяционный многочлен 4 степени")
             {
                 LineStyle = LineStyle.Dash,

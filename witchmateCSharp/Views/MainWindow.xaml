@@ -1,8 +1,8 @@
 ﻿<Window
     Height="720"
+    KeyDown="OnKeyDown"
     MinHeight="720"
     MinWidth="1280"
-    Title="MainWindow"
     Width="1280"
     WindowState="Maximized"
     mc:Ignorable="d"
@@ -223,6 +223,7 @@
                                 </Label>
                                 <TextBox
                                     FontSize="17"
+                                    Name="TextBoxX"
                                     PreviewTextInput="OnPreviewTextInput"
                                     Text="{Binding X}"
                                     TextAlignment="Center" />
@@ -239,16 +240,19 @@
                                 </Label>
                                 <TextBox
                                     FontSize="17"
+                                    Name="TextBoxY"
                                     PreviewTextInput="OnPreviewTextInput"
                                     Text="{Binding Y}"
                                     TextAlignment="Center" />
                             </DockPanel>
                             <Button
+                                Click="OnXYClick"
                                 Command="{Binding AddPoint}"
                                 Content="Добавить точку"
                                 FontSize="17"
                                 Height="50"
                                 Margin="10"
+                                Name="ButtonXY"
                                 Style="{StaticResource JordanButton}" />
                         </StackPanel>
                     </Grid>
@@ -344,6 +348,7 @@
                                 </Label>
                                 <TextBox
                                     FontSize="17"
+                                    Name="TextBoxA"
                                     PreviewTextInput="OnPreviewTextInput"
                                     Text="{Binding A}"
                                     TextAlignment="Center" />
@@ -355,6 +360,7 @@
                                 FontSize="17"
                                 Height="50"
                                 Margin="10"
+                                Name="ButtonA"
                                 Style="{StaticResource JordanButton}" />
                         </StackPanel>
                     </Grid>

@@ -1,4 +1,5 @@
-﻿using witchmateCSharp.Models.Functions;
+﻿using System.Diagnostics;
+using witchmateCSharp.Models.Functions;
 using witchmateCSharp.Models.Matrix;
 
 namespace witchmateCSharp.Models.Services;
@@ -12,7 +13,7 @@ public enum ApproximationMethod
 
 public class ApproximationService
 {
-    public List<float> GetLeastSquaresMethodCoefficients(IFunctionSolution solution, int degree)
+    public List<float>? GetLeastSquaresMethodCoefficients(IFunctionSolution solution, int degree)
     {
         List<float> cs = [];
         List<float> ds = [];
@@ -35,8 +36,17 @@ public class ApproximationService
         List<List<float>> cMatrix = new();
         for (int i = 0; i <= degree; i++)
             cMatrix.Add(cs[i..(i + degree + 1)]);
+        List<float> a;
 
-        var a = Gauss.SolveMatrix(cMatrix, ds);
+        try
+        {
+            a = Gauss.SolveMatrix(cMatrix, ds);
+        }
+        catch (ArgumentException e)
+        {
+            Debug.WriteLine(e.Message);
+            return null;
+        }
 
         return a;
     }
@@ -88,10 +98,10 @@ public class ApproximationService
     public float CalculateNewtonFunction(Dictionary<int, List<float>> steps, IFunctionSolution solution, float x)
     {
         if (steps.Count != solution.Solves.Count) throw new ArgumentException();
-        
+
         List<float> xs = solution.Solves.Select(pair => pair.Key).ToList();
         float result = steps[0][0];
-        
+
         for (int i = 1; i < steps.Count; i++)
         {
             float multiple = 1;
