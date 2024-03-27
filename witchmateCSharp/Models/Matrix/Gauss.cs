@@ -7,24 +7,24 @@ public static class Gauss
         List<int> indexes = [];
         for (int i = 0; i < a.Count; i++)
             indexes.Add(i);
-        
+
         ChooseMainElements(a, indexes);
         ConvertToStepwise(a, b);
         return FindStepwiseXs(a, b, indexes);
     }
-    
+
     private static void ChooseMainElements(List<List<float>> A, List<int> indexes)
     {
         for (int i = 0; i < A.Count; i++)
             for (int j = i + 1; j < A[i].Count; j++)
                 if (Math.Abs(A[i][j]) > Math.Abs(A[i][i]))
+                {
+                    (indexes[i], indexes[j]) = (indexes[j], indexes[i]);
                     foreach (var k in A)
-                    {
-                        (indexes[i], indexes[j]) = (indexes[j], indexes[i]);
                         (k[i], k[j]) = (k[j], k[i]);
-                    }
+                }
     }
-    
+
     private static void ConvertToStepwise(List<List<float>> A, List<float> B)
     {
         for (int i = 0; i < A.Count; i++)
@@ -39,10 +39,10 @@ public static class Gauss
                     if (A[k][i] != 0)
                     {
                         a = A[k][i];
-                        
+
                         (A[k], A[i]) = (A[i], A[k]);
                         (B[k], B[i]) = (B[i], B[k]);
-                        
+
                         break;
                     }
 
@@ -76,12 +76,13 @@ public static class Gauss
 
             X.Add(total / A[i][i]);
         }
+
         X.Reverse();
 
         List<float> rightX = [];
         for (int i = 0; i < X.Count; i++)
             rightX.Add(X[indexes.IndexOf(i)]);
-        
+
         return rightX;
     }
 }

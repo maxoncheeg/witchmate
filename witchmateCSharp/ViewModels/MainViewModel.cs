@@ -278,7 +278,7 @@ public class MainViewModel : ViewModel
             new(4, 11f / 40f),
         ];
         
-        Degree = "0";
+        Degree = "1";
         ChooseTypeMethod(ApproximationMethod.LeastSquares);
     }
 
